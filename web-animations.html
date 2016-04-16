@@ -8,4 +8,40 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<script src="../web-animations-js/web-animations-next-lite.min.js"></script>
+<script>
+(function() {
+  if (!window.document.timeline) {
+    var timeline = {
+      play: function() {
+        var player = {
+          cancel: function() {}
+        };
+        setTimeout(function() {
+          if (player.onfinish) {
+            player.onfinish();
+          }
+        }, 1);
+        return player;
+      },
+      _needImport: true
+    };
+    try {
+      Object.defineProperty(window.document, 'timeline', {
+        configurable: true,
+        get: function() { return timeline; }
+      });
+    } catch (e) { }
+    try {
+      window.document.timeline = timeline;
+    } catch (e) { }
+  }
+  if (!window.KeyframeEffect) {
+    window.KeyframeEffect = function() {};
+    window.KeyframeEffect_needImport = true;
+  }
+  if (!window.GroupEffect) {
+    window.GroupEffect = function() {};
+    window.GroupEffect_needImport = true;
+  }
+})();
+</script>
